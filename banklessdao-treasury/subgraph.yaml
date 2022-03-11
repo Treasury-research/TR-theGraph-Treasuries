@@ -1,0 +1,408 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  ## -------------- Factory -------------- ##
+  - kind: ethereum/contract
+    name: SushiV2Factory
+    network: mainnet
+    source:
+      address: "0xC0AEe478e3658e2610c5F7A4A2E1777cE9e4f2Ac"
+      abi: V2Factory
+      startBlock: 10794229
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/allocation.ts
+      entities:
+        - SushiV2Factory
+      abis:
+        - name: V2Factory
+          file: ./abis/V2Factory.json
+      eventHandlers:
+        - event: PairCreated(indexed address,indexed address,address,uint256)
+          handler: handlePairCreated
+  - kind: ethereum/contract
+    name: UniV3Factory
+    network: mainnet
+    source:
+      address: "0x1F98431c8aD98523631AE4a59f267346ea31F984"
+      abi: V3Factory
+      startBlock: 12369621
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/volume.ts
+      entities:
+        - UniV3Factory
+      abis:
+        - name: V3Factory
+          file: ./abis/V3Factory.json
+      eventHandlers:
+        - event: PoolCreated(indexed address,indexed address,indexed uint24,int24,address)
+          handler: handlePoolCreated
+      blockHandlers:
+        - handler: handleBlock
+
+  ## ---------------- ERC20 Token ---------------- ##
+  # Native token: BANK
+  - kind: ethereum/contract
+    name: BANK
+    network: mainnet
+    source:
+      address: "0x2d94AA3e47d9D5024503Ca8491fcE9A2fB4DA198"
+      abi: ERC20
+      startBlock: 12365456
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/allocation.ts
+      entities:
+        - BANK
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+  - kind: ethereum/contract
+    name: BANK_2
+    network: mainnet
+    source:
+      address: "0x2d94AA3e47d9D5024503Ca8491fcE9A2fB4DA198"
+      abi: ERC20
+      startBlock: 12365456
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/holders.ts
+      entities:
+        - BANK
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleNativeTransfer
+  # Other erc20 tokens holded by treasury
+  - kind: ethereum/contract
+    name: ROBOT
+    network: mainnet
+    source:
+      address: "0xfb5453340C03db5aDe474b27E68B6a9c6b2823Eb"
+      abi: ERC20
+      startBlock: 10965339
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/allocation.ts
+      entities:
+        - ROBOT
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+  - kind: ethereum/contract
+    name: USDC
+    network: mainnet
+    source:
+      address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+      abi: ERC20
+      startBlock: 6082465
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/allocation.ts
+      entities:
+        - USDC
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+  - kind: ethereum/contract
+    name: RARI
+    network: mainnet
+    source:
+      address: "0xFca59Cd816aB1eaD66534D82bc21E7515cE441CF"
+      abi: ERC20
+      startBlock: 10457021
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/allocation.ts
+      entities:
+        - RARI
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+  - kind: ethereum/contract
+    name: WETH
+    network: mainnet
+    source:
+      address: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
+      abi: ERC20
+      startBlock: 4719568
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/allocation.ts
+      entities:
+        - WETH
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+  - kind: ethereum/contract
+    name: DAI
+    network: mainnet
+    source:
+      address: "0x6B175474E89094C44Da98b954EedeAC495271d0F"
+      abi: ERC20
+      startBlock: 8928158
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/allocation.ts
+      entities:
+        - DAI
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+  - kind: ethereum/contract
+    name: INDEX
+    network: mainnet
+    source:
+      address: "0x0954906da0Bf32d5479e25f46056d22f08464cab"
+      abi: ERC20
+      startBlock: 11000455
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/allocation.ts
+      entities:
+        - INDEX
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+  - kind: ethereum/contract
+    name: BED
+    network: mainnet
+    source:
+      address: "0x2aF1dF3AB0ab157e1E2Ad8F88A7D04fbea0c7dc6"
+      abi: ERC20
+      startBlock: 12819557
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/allocation.ts
+      entities:
+        - BED
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+  - kind: ethereum/contract
+    name: UMA
+    network: mainnet
+    source:
+      address: "0x04Fa0d235C4abf4BcF4787aF4CF447DE572eF828"
+      abi: ERC20
+      startBlock: 9247089
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/allocation.ts
+      entities:
+        - UMA
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+  - kind: ethereum/contract
+    name: PERP
+    network: mainnet
+    source:
+      address: "0xbC396689893D065F41bc2C6EcbeE5e0085233447"
+      abi: ERC20
+      startBlock: 10804048
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/allocation.ts
+      entities:
+        - PERP
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+  - kind: ethereum/contract
+    name: USDT
+    network: mainnet
+    source:
+      address: "0xdAC17F958D2ee523a2206206994597C13D831ec7"
+      abi: ERC20
+      startBlock: 4634748
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/allocation.ts
+      entities:
+        - USDT
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+  - kind: ethereum/contract
+    name: MASK
+    network: mainnet
+    source:
+      address: "0x69af81e73A73B40adF4f3d4223Cd9b1ECE623074"
+      abi: ERC20
+      startBlock: 11886238
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/allocation.ts
+      entities:
+        - MASK
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+  - kind: ethereum/contract
+    name: SUSHI
+    network: mainnet
+    source:
+      address: "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2"
+      abi: ERC20
+      startBlock: 10736094
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/allocation.ts
+      entities:
+        - SUSHI
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+  - kind: ethereum/contract
+    name: PAN
+    network: mainnet
+    source:
+      address: "0xD56daC73A4d6766464b38ec6D91eB45Ce7457c44"
+      abi: ERC20
+      startBlock: 8392794
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/allocation.ts
+      entities:
+        - PAN
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+  - kind: ethereum/contract
+    name: GRT
+    network: mainnet
+    source:
+      address: "0xc944E90C64B2c07662A292be6244BDf05Cda44a7"
+      abi: ERC20
+      startBlock: 11446769
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/allocation.ts
+      entities:
+        - GRT
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+templates:
+  - kind: ethereum/contract
+    name: V2Pair
+    network: mainnet
+    source:
+      abi: V2Pair
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/allocation.ts
+      entities:
+        - V2Pair
+      abis:
+        - name: V2Pair
+          file: ./abis/V2Pair.json
+      eventHandlers:
+        - event: Sync(uint112,uint112)
+          handler: handleSync
+  - kind: ethereum/contract
+    name: V3Pool
+    network: mainnet
+    source:
+      abi: V3Pool
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/volume.ts
+      entities:
+        - V3Pool
+      abis:
+        - name: V3Pool
+          file: ./abis/V3Pool.json
+      eventHandlers:
+        - event: Swap(indexed address,indexed address,int256,int256,uint160,uint128,int24)
+          handler: handleSwap

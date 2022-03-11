@@ -1,0 +1,16 @@
+{
+  "name": "ygg-treasury",
+  "license": "UNLICENSED",
+  "scripts": {
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ gougougogol/ygg-treasury",
+    "create-local": "graph create --node http://localhost:8020/ gougougogol/ygg-treasury",
+    "remove-local": "graph remove --node http://localhost:8020/ gougougogol/ygg-treasury",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 gougougogol/ygg-treasury"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "0.23.2",
+    "@graphprotocol/graph-ts": "0.23.1"
+  }
+}

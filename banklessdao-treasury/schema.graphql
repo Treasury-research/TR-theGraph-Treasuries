@@ -1,0 +1,41 @@
+type Token @entity {
+  id: ID! # token contract address
+  symbol: String!
+  balance: BigDecimal!
+  priceUSD: BigDecimal!
+  valueUSD: BigDecimal!
+}
+
+type Bundle @entity {
+  id: ID! # "bundle"
+  ethPriceUSD: BigDecimal!
+}
+
+type NumberOfHolder @entity {
+  id: ID! # BANK contract address
+  symbol: String! # "BANK"
+  number: BigInt!
+}
+
+type Holder @entity {
+  id: ID! # holder address
+  amount: BigDecimal!
+}
+
+type DailyVolume @entity {
+  id: ID! # BANK contract address
+  symbol: String! # "BANK"
+  volume: BigDecimal!
+}
+
+type DailySwap @entity {
+  id: ID!
+  amount: BigDecimal!
+  valueUSD: BigDecimal!
+  timestamp: BigInt!
+}
+
+type InQueueSwapID @entity {
+  id: ID! # "queue"
+  swapIds: [String!]!
+}

@@ -1,0 +1,291 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  ## -------------- Factory -------------- ##
+  # SushiV2Factory used to fetch pair of Toke, xSUSHI with WETH
+  - kind: ethereum/contract
+    name: SushiV2Factory
+    network: mainnet
+    source:
+      address: "0xC0AEe478e3658e2610c5F7A4A2E1777cE9e4f2Ac"
+      abi: V2Factory
+      startBlock: 10794229
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/allocation.ts
+      entities:
+        - SushiV2Factory
+      abis:
+        - name: V2Factory
+          file: ./abis/V2Factory.json
+      eventHandlers:
+        - event: PairCreated(indexed address,indexed address,address,uint256)
+          handler: handlePairCreated
+  # UniV2Factory used to fetch pair of USDT, COOM, DOTC, REALMADRID with WETH
+  - kind: ethereum/contract
+    name: UniV2Factory
+    network: mainnet
+    source:
+      address: "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f"
+      abi: V2Factory
+      startBlock: 10000835
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/allocation.ts
+      entities:
+        - UniV2Factory
+      abis:
+        - name: V2Factory
+          file: ./abis/V2Factory.json
+      eventHandlers:
+        - event: PairCreated(indexed address,indexed address,address,uint256)
+          handler: handlePairCreated
+  # UniV3Factory used to fetch all pools related to Sushi, and then calculate the 24h volume
+  - kind: ethereum/contract
+    name: UniV3Factory
+    network: mainnet
+    source:
+      address: "0x1F98431c8aD98523631AE4a59f267346ea31F984"
+      abi: V3Factory
+      startBlock: 12369621
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/volume.ts
+      entities:
+        - UniV3Factory
+      abis:
+        - name: V3Factory
+          file: ./abis/V3Factory.json
+      eventHandlers:
+        - event: PoolCreated(indexed address,indexed address,indexed uint24,int24,address)
+          handler: handlePoolCreated
+      blockHandlers:
+        - handler: handleBlock
+
+  ## ---------------- ERC20 Token ---------------- ##
+  # Native token: Sushi
+  - kind: ethereum/contract
+    name: Sushi
+    network: mainnet
+    source:
+      address: "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2"
+      abi: ERC20
+      startBlock: 10736094
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/allocation.ts
+      entities:
+        - Sushi
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+  - kind: ethereum/contract
+    name: Sushi_2
+    network: mainnet
+    source:
+      address: "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2"
+      abi: ERC20
+      startBlock: 10736094
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/holders.ts
+      entities:
+        - Sushi
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleNativeTransfer
+  # Other erc20 tokens holded by treasury
+  - kind: ethereum/contract
+    name: Toke
+    network: mainnet
+    source:
+      address: "0x2e9d63788249371f1DFC918a52f8d799F4a38C94"
+      abi: ERC20
+      startBlock: 12961612
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/allocation.ts
+      entities:
+        - Toke
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+  - kind: ethereum/contract
+    name: xSUSHI
+    network: mainnet
+    source:
+      address: "0x8798249c2E607446EfB7Ad49eC89dD1865Ff4272"
+      abi: ERC20
+      startBlock: 10801571
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/allocation.ts
+      entities:
+        - xSUSHI
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+  - kind: ethereum/contract
+    name: COOM
+    network: mainnet
+    source:
+      address: "0x7DDdcb8D93438500c42c199b6B02ba3F74C7cB8c"
+      abi: ERC20
+      startBlock: 12614883
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/allocation.ts
+      entities:
+        - COOM
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+  - kind: ethereum/contract
+    name: DOTC
+    network: mainnet
+    source:
+      address: "0xc0748CF90e231b8f21F75b7AD69732F19C76B751"
+      abi: ERC20
+      startBlock: 11189090
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/allocation.ts
+      entities:
+        - DOTC
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+  - kind: ethereum/contract
+    name: REALMADRID
+    network: mainnet
+    source:
+      address: "0x819C492D85A02A7F4aa1FA801fc7e3d565c8273d"
+      abi: ERC20
+      startBlock: 12494801
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/allocation.ts
+      entities:
+        - REALMADRID
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+  - kind: ethereum/contract
+    name: sushiHOUSE
+    network: mainnet
+    source:
+      address: "0x7b18913D945242A9c313573E6c99064cd940c6aF"
+      abi: ERC20
+      startBlock: 12331576
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/allocation.ts
+      entities:
+        - sushiHOUSE
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+  - kind: ethereum/contract
+    name: SOCKSCLASSIC
+    network: mainnet
+    source:
+      address: "0xf7A5A8A95491EC170738434963B649671b563b88"
+      abi: ERC20
+      startBlock: 8176295
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/allocation.ts
+      entities:
+        - SOCKSCLASSIC
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+templates:
+  - kind: ethereum/contract
+    name: V2Pair
+    network: mainnet
+    source:
+      abi: V2Pair
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/allocation.ts
+      entities:
+        - V2Pair
+      abis:
+        - name: V2Pair
+          file: ./abis/V2Pair.json
+      eventHandlers:
+        - event: Sync(uint112,uint112)
+          handler: handleSync
+  - kind: ethereum/contract
+    name: V3Pool
+    network: mainnet
+    source:
+      abi: V3Pool
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/volume.ts
+      entities:
+        - V3Pool
+      abis:
+        - name: V3Pool
+          file: ./abis/V3Pool.json
+      eventHandlers:
+        - event: Swap(indexed address,indexed address,int256,int256,uint160,uint128,int24)
+          handler: handleSwap
